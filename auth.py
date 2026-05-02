@@ -13,7 +13,7 @@ load_dotenv()
 
 SECRET_KEY = os.getenv('SECRET_KEY')
 ALGORYTHM = 'HS256'
-TOKEN_TIME = 30
+TOKEN_TIME = 15
 
 pwd_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
 oauth2_schema = OAuth2PasswordBearer(tokenUrl='login')
@@ -48,3 +48,5 @@ def verify_token(token :str = Depends(oauth2_schema), db: Session = Depends(get_
 
     if user is None:
         raise credentials_exception
+    
+    return user
