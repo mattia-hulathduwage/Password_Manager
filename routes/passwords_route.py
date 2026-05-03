@@ -69,3 +69,29 @@ def get_password(id: int, db: session = Depends(get_db), token: str = Depends(ve
                 'last_updated': password_user.last_updated
             }
         }
+    
+@router.put('/update_password/{id}')
+def update_password(id: str, input: Passwords, db: session = Depends(get_db), token: str = Depends(verify_token)):
+    select_password = db.query(data.Passwords).filter(data.Passwords.id == id, data.Passwords.user == token.id).first()
+    if not select_password:
+        return {
+            'status': 'error',
+            'detail': 'password not found'
+        }
+    else:
+        select_password.title = input.title
+        select_password.password = encrypt_pwd(input.password)
+        select_password.last_updated = date.today()
+
+        db.commit()
+        db.refresh(select_password)
+
+        return {
+            'status': 'success',
+            'data': {
+                'id': select_password.id,
+                'title': select_password.title,
+                'password': decrypt_pwd(select_password.password),
+                'last_updated': select_password.last_updated
+            }
+        }
