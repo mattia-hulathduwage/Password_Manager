@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from schemas.passwords_schema import Passwords
 import database.database_model as data
 from dependency import get_db, encrypt_pwd, decrypt_pwd
